@@ -7,8 +7,15 @@ import numpy as np
 
 # Carregar o JSON do arquivo 'respostas_drigor.json'
 json_path = "respostas_drigor.json"
-with open(json_path, "r") as file:
-    data = json.load(file)
+try:
+    with open(json_path, "r") as file:
+        data = json.load(file)
+except FileNotFoundError:
+    print(f"Erro: Arquivo '{json_path}' não encontrado.")
+    data = {}
+except json.JSONDecodeError:
+    print(f"Erro: Arquivo '{json_path}' está corrompido ou mal formatado.")
+    data = {}
 
 # Configurar modelo e índice FAISS
 model = SentenceTransformer('all-MiniLM-L6-v2')
@@ -17,14 +24,22 @@ model = SentenceTransformer('all-MiniLM-L6-v2')
 questions = []
 answers = []
 for key, value in data.items():
-    questions.append(value['pergunta'])
-    answers.append(value['resposta'])
+    # Verificar se as chaves 'pergunta' e 'resposta' existem no JSON
+    if 'pergunta' in value and 'resposta' in value:
+        questions.append(value['pergunta'])
+        answers.append(value['resposta'])
+    else:
+        print(f"A entrada '{key}' está faltando 'pergunta' ou 'resposta' e foi ignorada.")
 
-# Criar embeddings para as perguntas
-embeddings = model.encode(questions)
-dimension = embeddings.shape[1]
-index = faiss.IndexFlatL2(dimension)
-index.add(embeddings)
+# Criar embeddings para as perguntas (somente se houver perguntas válidas)
+if questions:
+    embeddings = model.encode(questions)
+    dimension = embeddings.shape[1]
+    index = faiss.IndexFlatL2(dimension)
+    index.add(embeddings)
+else:
+    print("Nenhuma pergunta válida encontrada no JSON.")
+    index = None
 
 # Criar a API Flask
 app = Flask(__name__)
@@ -43,6 +58,10 @@ def get_answer():
     user_question = data.get("question")
     if not user_question:
         return jsonify({"error": "A pergunta está vazia ou não foi enviada"}), 400
+
+    # Verificar se o índice FAISS foi criado
+    if index is None:
+        return jsonify({"error": "O sistema não está pronto. Nenhuma pergunta foi carregada."}), 500
 
     # Codificar a pergunta do usuário
     user_embedding = model.encode([user_question])
