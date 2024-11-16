@@ -1,23 +1,30 @@
 {
   "chip_da_beleza": {
-    "resposta": "Na verdade, não existe o *'Chip da Beleza'*! 😄 Existe o *Implante de Gestrinona*, que ficou popularmente conhecido como Chip da Beleza! 💊✨\n\nA Gestrinona é um hormônio usado para:\n- Parar de menstruar 🚫🩸\n- Tratar sintomas de TPM grave 😩\n- Tratar Miomas e Endometriose 🩺\n\nEla ganhou o nome de 'Chip da Beleza' devido ao seu *potencial efeito anabólico*:\n⬆ Metabolismo acelerado 💥, ⬆ Massa muscular 💪, ⬇ Redução de gordura 🔥, ⬆ Libido 😏, ⬆ Disposição 🕺 e melhora na celulite e flacidez. 🎯"
+    "pergunta": "O que é o Chip da Beleza?",
+    "resposta": "🌟 Na verdade, não existe o 'Chip da Beleza'. É um apelido dado para o implante hormonal que pode auxiliar no controle de hormônios. 💉"
   },
   "endereco_clinica": {
-    "resposta": "O endereço da clínica é:\n🏢 *Av. T-4, 1340*, Edifício San Charbel, 1º andar, Clínica Dermoplastik - St. Bueno, Goiânia - GO, 74230-030.\n🚗 Temos estacionamento gratuito!\n🗺️ [Clique aqui para o link no Waze](https://waze.com/ul/h6vhbyusbh)."
+    "pergunta": "Qual é o endereço da clínica?",
+    "resposta": "🏢 O endereço da clínica é: Av. T-4, 1340, Edifício San Charbel, 1º andar, Clínica Dermoplastik - St. Bueno, Goiânia - GO, 74230-030. 📍"
   },
   "horarios_consulta": {
-    "resposta": "As consultas estão disponíveis nas seguintes datas e horários:\n📅 *Segunda-feira*: 10h, 14h\n📅 *Terça-feira*: 9h, 13h\nPor favor, escolha o horário que melhor se adapta para você! 😊"
+    "pergunta": "Quais são os horários disponíveis para consultas?",
+    "resposta": "⏰ Os horários de consulta são de segunda a sexta, das 8h às 18h. 📅"
   },
   "consulta_online": {
-    "resposta": "{primeiro-nome}, estou animada em compartilhar informações sobre a sua consulta online! 🖥️✨\n\n- As consultas online são realizadas via *Google Meet* 💻📱.\n- Certifique-se de estar em um local com boa conexão à internet para garantir a qualidade da consulta! 🌐\n- Pode ser feita tanto pelo celular 📱 quanto pelo computador 🖥️.\n\nCaso tenha exames 📑, por favor, encaminhe para este WhatsApp antes da consulta."
+    "pergunta": "Como são realizadas as consultas online?",
+    "resposta": "🖥️ As consultas online são feitas via Google Meet. Você receberá um link antes da consulta. 🌐"
   },
   "valores_consulta": {
-    "resposta": "{primeiro-nome}, eu te entendo! 😊\nMas, tenho excelentes notícias! 🎉\nO Dr. Igor está oferecendo um desconto especial: de *R$ 700,00* por apenas *R$ 550,00*! 💰\nEle faz isso porque valoriza cada paciente que confia no seu trabalho. Aproveite essa oportunidade exclusiva!"
+    "pergunta": "Quais são os valores das consultas?",
+    "resposta": "💲 Para saber os valores das consultas, por favor entre em contato com nossa recepção. 📞"
   },
   "formas_pagamento": {
-    "resposta": "Aceitamos as seguintes formas de pagamento:\n💵 *Dinheiro*\n💳 *Pix*: 35987871/0001-25 - Igor Ribeiro Barcelos\n💳 *Débito e Crédito* (parcelamento em até 6x para implantes hormonais)\n❌ *Não aceitamos cheques.*"
+    "pergunta": "Quais são as formas de pagamento aceitas?",
+    "resposta": "💳 Aceitamos pagamentos em cartão de crédito, débito e transferências bancárias. ✅"
   },
   "quem_e_dr_igor": {
-    "resposta": "O Dr. Igor Barcelos é *Especialista em Endocrinologia e Metabologia* 👨‍⚕️, com mais de *16 anos de experiência* e *milhares de pacientes satisfeitos*! 🌟\nEle se destaca nas áreas de:\n✅ Reposição Hormonal\n✅ Implantes Hormonais 'Chips'\n✅ Emagrecimento 🥗\n✅ Hipertrofia Muscular 💪 e Perda de Gordura 🔥\n✅ Crescimento 📈\n\nO Dr. Igor oferece um atendimento diferenciado e personalizado, sempre focado na sua saúde, bem-estar e autoestima! 🧡\n\nAgende agora sua consulta e comece a sentir a diferença que um médico dedicado pode fazer na sua vida! 😊"
+    "pergunta": "Quem é o Dr. Igor Barcelos?",
+    "resposta": "👨‍⚕️ O Dr. Igor Barcelos é especialista em endocrinologia e metabologia, com experiência em tratamentos hormonais e saúde metabólica. 🩺"
   }
 }
