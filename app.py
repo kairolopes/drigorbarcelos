@@ -35,7 +35,12 @@ def home():
 
 @app.route('/get_answer', methods=['POST'])
 def get_answer():
-    user_question = request.json.get("question")
+    # Log para depuração - ver o que o ChatVolts está enviando
+    data = request.json
+    print("Dados recebidos do ChatVolts:", data)
+
+    # Verificar se a chave "question" está presente
+    user_question = data.get("question")
     if not user_question:
         return jsonify({"error": "A pergunta está vazia ou não foi enviada"}), 400
 
