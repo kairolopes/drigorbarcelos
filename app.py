@@ -12,10 +12,10 @@ try:
         data = json.load(file)
 except FileNotFoundError:
     print(f"Erro: Arquivo '{json_path}' não encontrado.")
-    data = {}
+    data = []
 except json.JSONDecodeError:
     print(f"Erro: Arquivo '{json_path}' está corrompido ou mal formatado.")
-    data = {}
+    data = []
 
 # Configurar modelo e índice FAISS
 model = SentenceTransformer('all-MiniLM-L6-v2')
@@ -23,13 +23,17 @@ model = SentenceTransformer('all-MiniLM-L6-v2')
 # Preparar perguntas e respostas do JSON
 questions = []
 answers = []
-for key, value in data.items():
+
+# Iterar corretamente sobre os itens da lista
+for entry in data:
     # Verificar se as chaves 'pergunta' e 'resposta' existem no JSON
-    if 'pergunta' in value and 'resposta' in value:
-        questions.append(value['pergunta'])
-        answers.append(value['resposta'])
+    pergunta = entry.get("pergunta")
+    resposta = entry.get("resposta")
+    if pergunta and resposta:
+        questions.append(pergunta)
+        answers.append(resposta)
     else:
-        print(f"A entrada '{key}' está faltando 'pergunta' ou 'resposta' e foi ignorada.")
+        print(f"Entrada inválida no JSON: {entry}")
 
 # Criar embeddings para as perguntas (somente se houver perguntas válidas)
 if questions:
@@ -50,14 +54,14 @@ def home():
 
 @app.route('/get_answer', methods=['POST'])
 def get_answer():
-    # Log para depuração - ver o que o ChatVolts está enviando
-    data = request.json
-    print("Dados recebidos do ChatVolts:", data)
+    # Log para depuração - ver os dados recebidos
+    req_data = request.json
+    print("Dados recebidos:", req_data)
 
-    # Verificar se a chave "question" está presente
-    user_question = data.get("question")
+    # Verificar se a chave "pergunta" está presente
+    user_question = req_data.get("pergunta")
     if not user_question:
-        return jsonify({"error": "A pergunta está vazia ou não foi enviada"}), 400
+        return jsonify({"error": "A pergunta está vazia ou não foi enviada."}), 400
 
     # Verificar se o índice FAISS foi criado
     if index is None:
