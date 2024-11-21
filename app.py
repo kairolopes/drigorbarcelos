@@ -5,8 +5,8 @@ import faiss
 import os
 import numpy as np
 
-# Carregar o JSON do arquivo 'respostas_drigor.json'
-json_path = "respostas_drigor.json"
+# Carregar o JSON do arquivo 'respostas.json'
+json_path = "respostas.json"
 try:
     with open(json_path, "r") as file:
         data = json.load(file)
