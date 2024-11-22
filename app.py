@@ -1,86 +1,56 @@
-import json
+import re
 from flask import Flask, request, jsonify
 from sentence_transformers import SentenceTransformer
 import faiss
 import os
-import numpy as np
 
-# Carregar o JSON do arquivo 'respostas.json'
-json_path = "respostas.json"
-try:
-    with open(json_path, "r") as file:
-        data = json.load(file)
-except FileNotFoundError:
-    print(f"Erro: Arquivo '{json_path}' não encontrado.")
-    data = []
-except json.JSONDecodeError:
-    print(f"Erro: Arquivo '{json_path}' está corrompido ou mal formatado.")
-    data = []
+# Função para carregar perguntas e respostas do arquivo Markdown
+def load_md(md_path):
+    with open(md_path, "r", encoding="utf-8") as file:
+        md_content = file.read()
+
+    # Regex para extrair perguntas e respostas do Markdown
+    pattern = r"## (.*?)\n(.*?)\n\n---"
+    matches = re.findall(pattern, md_content, re.DOTALL)
+
+    # Estrutura para armazenar perguntas e respostas
+    perguntas_respostas = [{"pergunta": question.strip(), "resposta": answer.strip()} for question, answer in matches]
+    return perguntas_respostas
+
+# Carregar perguntas e respostas do arquivo Markdown
+md_path = "perguntas_drigor.md"
+data = load_md(md_path)
 
 # Configurar modelo e índice FAISS
+questions = [item["pergunta"] for item in data]
 model = SentenceTransformer('all-MiniLM-L6-v2')
-
-# Preparar perguntas e respostas do JSON
-questions = []
-answers = []
-
-# Iterar corretamente sobre os itens da lista
-for entry in data:
-    # Verificar se as chaves 'pergunta' e 'resposta' existem no JSON
-    pergunta = entry.get("pergunta")
-    resposta = entry.get("resposta")
-    if pergunta and resposta:
-        questions.append(pergunta)
-        answers.append(resposta)
-    else:
-        print(f"Entrada inválida no JSON: {entry}")
-
-# Criar embeddings para as perguntas (somente se houver perguntas válidas)
-if questions:
-    embeddings = model.encode(questions)
-    dimension = embeddings.shape[1]
-    index = faiss.IndexFlatL2(dimension)
-    index.add(embeddings)
-else:
-    print("Nenhuma pergunta válida encontrada no JSON.")
-    index = None
+embeddings = model.encode(questions)
+dimension = embeddings.shape[1]
+index = faiss.IndexFlatL2(dimension)
+index.add(embeddings)
 
 # Criar a API Flask
 app = Flask(__name__)
 
+# Adicionando o endpoint para a raiz
 @app.route('/')
 def home():
-    return jsonify({"message": "Bem-vindo à API do Dr. Igor Barcelos!"}), 200
+    return jsonify({"message": "Bem-vindo à API de Incontinência Urinária!"}), 200
 
 @app.route('/get_answer', methods=['POST'])
 def get_answer():
-    # Log para depuração - ver os dados recebidos
-    req_data = request.json
-    print("Dados recebidos:", req_data)
-
-    # Verificar se a chave "pergunta" está presente
-    user_question = req_data.get("pergunta")
+    user_question = request.json.get("question")
     if not user_question:
-        return jsonify({"error": "A pergunta está vazia ou não foi enviada."}), 400
+        return jsonify({"error": "A pergunta está vazia ou não foi enviada"}), 400
 
-    # Verificar se o índice FAISS foi criado
-    if index is None:
-        return jsonify({"error": "O sistema não está pronto. Nenhuma pergunta foi carregada."}), 500
-
-    # Codificar a pergunta do usuário
     user_embedding = model.encode([user_question])
-
-    # Procurar a pergunta mais próxima usando FAISS
     _, indices = index.search(user_embedding, k=1)
-    matched_index = indices[0][0]
+    matched_question = questions[indices[0][0]]
+    response = next(item["resposta"] for item in data if item["pergunta"] == matched_question)
 
-    # Buscar a resposta correspondente
-    if matched_index < len(answers):
-        response = answers[matched_index]
-        return jsonify({"response": response})
+    return jsonify({"response": response})
 
-    return jsonify({"response": "Desculpe, não encontrei a informação solicitada."}), 404
-
+# Adicionar endpoint de verificação de integridade
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({"status": "ok"}), 200
