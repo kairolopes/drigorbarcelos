@@ -10,7 +10,7 @@ def load_md(md_path):
         md_content = file.read()
 
     # Regex para extrair perguntas e respostas do Markdown
-    pattern = r"## (.*?)\n(.*?)\n\n---"
+    pattern = r"## Pergunta: (.*?)\n\*\*Resposta\*\*:\n(.*?)\n---"
     matches = re.findall(pattern, md_content, re.DOTALL)
 
     # Estrutura para armazenar perguntas e respostas
