@@ -6,11 +6,15 @@ import os
 
 # Função para carregar perguntas e respostas do arquivo Markdown
 def load_md(md_path):
+    # Verificar se o arquivo existe
+    if not os.path.exists(md_path):
+        raise FileNotFoundError(f"O arquivo {md_path} não foi encontrado.")
+    
     with open(md_path, "r", encoding="utf-8") as file:
         md_content = file.read()
 
     # Regex para extrair perguntas e respostas do Markdown
-    pattern = r"## Pergunta: (.*?)\n\*\*Resposta\*\*:\n(.*?)\n---"
+    pattern = r"## Pergunta:\s*(.*?)\n\*\*Resposta\*\*:\s*\n(.*?)(?:\n---|$)"
     matches = re.findall(pattern, md_content, re.DOTALL)
 
     # Estrutura para armazenar perguntas e respostas
@@ -21,10 +25,24 @@ def load_md(md_path):
 md_path = "perguntas_drigor.md"
 data = load_md(md_path)
 
-# Configurar modelo e índice FAISS
+# Validações para garantir que os dados foram carregados corretamente
+if not data:
+    raise ValueError("Nenhuma pergunta ou resposta foi encontrada no arquivo Markdown. Verifique o formato do arquivo.")
+
+# Extrair apenas as perguntas para criar embeddings
 questions = [item["pergunta"] for item in data]
+
+if not questions:
+    raise ValueError("Nenhuma pergunta válida foi encontrada. Verifique o arquivo Markdown.")
+
+# Configurar modelo e índice FAISS
 model = SentenceTransformer('all-MiniLM-L6-v2')
 embeddings = model.encode(questions)
+
+# Validação para garantir que os embeddings foram gerados corretamente
+if embeddings.size == 0:
+    raise ValueError("Os embeddings não foram gerados corretamente. Verifique os dados de entrada.")
+
 dimension = embeddings.shape[1]
 index = faiss.IndexFlatL2(dimension)
 index.add(embeddings)
