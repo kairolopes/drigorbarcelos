@@ -26,8 +26,9 @@ md_path = "perguntas_drigor.md"
 data = load_md(md_path)
 
 # Validações para garantir que os dados foram carregados corretamente
+print(f"Dados carregados: {data}")  # Verificar os dados carregados
 if not data:
-    raise ValueError("Nenhuma pergunta ou resposta foi encontrada no arquivo Markdown. Verifique o formato do arquivo.")
+    raise ValueError("Nenhuma pergunta ou resposta foi encontrada. Verifique o formato do arquivo Markdown.")
 
 # Extrair apenas as perguntas para criar embeddings
 questions = [item["pergunta"] for item in data]
@@ -40,8 +41,9 @@ model = SentenceTransformer('all-MiniLM-L6-v2')
 embeddings = model.encode(questions)
 
 # Validação para garantir que os embeddings foram gerados corretamente
-if embeddings.size == 0:
-    raise ValueError("Os embeddings não foram gerados corretamente. Verifique os dados de entrada.")
+if len(embeddings) == 0:
+    raise ValueError("Os embeddings estão vazios. Verifique os dados de entrada ou o modelo.")
+print(f"Embeddings gerados com sucesso: {len(embeddings)} embeddings.")
 
 dimension = embeddings.shape[1]
 index = faiss.IndexFlatL2(dimension)
